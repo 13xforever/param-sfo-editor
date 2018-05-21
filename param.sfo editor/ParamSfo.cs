@@ -52,15 +52,16 @@ namespace param.sfo.editor
             if (!stream.CanSeek)
                 throw new ArgumentException("Stream must be seekable", nameof(stream));
 
-            using (var writer = new BinaryWriter(stream, new UTF8Encoding(false), true))
+            var utf8 = new UTF8Encoding(false);
+            using (var writer = new BinaryWriter(stream, utf8, true))
             {
-                writer.Write(Magic);
+                writer.Write(utf8.GetBytes(Magic));
                 writer.Write(MajorVersion);
                 writer.Write(MinorVersion);
                 writer.Write(Reserved1);
                 KeysOffset = 0x14 + Items.Count * 0x10;
                 writer.Write(KeysOffset);
-                ValuesOffset = KeysOffset + Items.Sum(i => i.Key.Length + 0);
+                ValuesOffset = KeysOffset + Items.Sum(i => i.Key.Length + 1);
                 if (ValuesOffset % 4 != 0)
                     ValuesOffset = (ValuesOffset / 4 + 1) * 4;
                 writer.Write(ValuesOffset);
@@ -74,14 +75,14 @@ namespace param.sfo.editor
                     var entry = Items[i];
 
                     writer.BaseStream.Seek(0x14 + i * 0x10, SeekOrigin.Begin);
-                    writer.Write((ushort)(lastKeyOffset - 0x14));
+                    writer.Write((ushort)(lastKeyOffset - KeysOffset));
                     writer.Write((ushort)entry.ValueFormat);
                     writer.Write(entry.ValueLength);
                     writer.Write(entry.ValueMaxLength);
-                    writer.Write(lastValueOffset);
+                    writer.Write(lastValueOffset - ValuesOffset);
 
                     writer.BaseStream.Seek(lastKeyOffset, SeekOrigin.Begin);
-                    writer.Write(entry.Key);
+                    writer.Write(utf8.GetBytes(entry.Key));
                     writer.Write((byte)0);
                     lastKeyOffset = (int)writer.BaseStream.Position;
 

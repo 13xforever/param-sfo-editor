@@ -20,7 +20,7 @@ namespace Tests
         }
 
         [Test]
-        public void ReadingTest()
+        public void SerializationConformanceTest()
         {
             var testFiles = GetTestFiles();
             foreach (var testFile in testFiles)

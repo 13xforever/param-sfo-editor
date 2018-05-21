@@ -18,13 +18,15 @@ namespace param.sfo.editor
         public string Key { get; set; }
         public byte[] BinaryValue { get; set; }
 
+        private static readonly char[] Whitespace = {'\r', '\n', '\0'};
+
         public string StringValue
         {
             get
             {
                 if (ValueFormat == EntryFormat.Utf8 || ValueFormat == EntryFormat.Utf8Null)
                 {
-                    var result = Encoding.UTF8.GetString(BinaryValue, 0, ValueLength).Trim();
+                    var result = Encoding.UTF8.GetString(BinaryValue, 0, ValueLength).Trim(Whitespace);
                     if (Environment.NewLine != "\n")
                         result = result.Replace("\n", Environment.NewLine);
                     return result;
@@ -37,7 +39,7 @@ namespace param.sfo.editor
                 if (ValueFormat != EntryFormat.Utf8 && ValueFormat != EntryFormat.Utf8Null)
                     throw new InvalidOperationException("Current value format is not a string");
 
-                var saneValue = value?.Trim() ?? "";
+                var saneValue = value?.Trim(Whitespace) ?? "";
                 if (Environment.NewLine != "\n")
                     saneValue = saneValue.Replace(Environment.NewLine, "\n");
 
