@@ -7,6 +7,9 @@ namespace param.sfo.editor
 {
     public partial class Form1 : Form
     {
+        private ParamSfo paramSfo;
+        private ParamSfoEntry titleEntry;
+
         public Form1()
         {
             InitializeComponent();
@@ -26,17 +29,17 @@ namespace param.sfo.editor
                 return;
             }
 
-            ParamSfo paramSfo;
-            using (var stream = File.Open(filenameBox.Text, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+            using (var stream = File.Open(filenameBox.Text, FileMode.Open, FileAccess.Read, FileShare.Read))
                 paramSfo = ParamSfo.ReadFrom(stream);
-            var title = paramSfo.Items.FirstOrDefault(i => i.Key == "TITLE");
-            if (title == null)
+            titleEntry = paramSfo.Items.FirstOrDefault(i => i.Key == "TITLE");
+            if (titleEntry == null)
             {
+                paramSfo = null;
                 MessageBox.Show("Title entry not found", "Unsupported param.sfo file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            titleBox.Text = title.StringValue;
+            titleBox.Text = titleEntry.StringValue;
 
             titleBox.TextChanged += titleBox_TextChanged;
         }
@@ -53,6 +56,28 @@ namespace param.sfo.editor
         private void titleBox_TextChanged(object sender, EventArgs e)
         {
             saveButton.Enabled = File.Exists(filenameBox.Text);
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            var filename = filenameBox.Text;
+            titleEntry.StringValue = titleBox.Text;
+
+            var bakFilename = filename + ".bak";
+            if (!File.Exists(bakFilename))
+                File.Copy(filename, bakFilename);
+
+            using (var stream = File.Open(filename, FileMode.Create, FileAccess.Write, FileShare.Read))
+                paramSfo.WriteTo(stream);
+
+            saveButton.Enabled = false;
+        }
+
+        private void filenameBox_TextChanged(object sender, EventArgs e)
+        {
+            saveButton.Enabled = false;
+            paramSfo = null;
+            titleEntry = null;
         }
     }
 }

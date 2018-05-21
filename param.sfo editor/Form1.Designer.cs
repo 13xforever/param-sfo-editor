@@ -46,6 +46,7 @@
             this.filenameBox.Name = "filenameBox";
             this.filenameBox.Size = new System.Drawing.Size(356, 20);
             this.filenameBox.TabIndex = 0;
+            this.filenameBox.TextChanged += new System.EventHandler(this.filenameBox_TextChanged);
             // 
             // label1
             // 
@@ -88,6 +89,7 @@
             this.saveButton.TabIndex = 4;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // label2
             // 
