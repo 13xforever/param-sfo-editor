@@ -18,7 +18,7 @@ namespace param.sfo.editor
         public string Key { get; set; }
         public byte[] BinaryValue { get; set; }
 
-        private static readonly char[] Whitespace = {'\r', '\n', '\0'};
+        private static readonly char[] Whitespace = {'\r', '\n', '\0', '\t', ' '};
 
         public string StringValue
         {
