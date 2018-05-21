@@ -15,6 +15,7 @@ namespace param.sfo.editor
         private void reloadButton_Click(object sender, EventArgs e)
         {
             saveButton.Enabled = false;
+            titleBox.TextChanged -= titleBox_TextChanged;
 
             if (string.IsNullOrEmpty(filenameBox.Text))
                 return;
@@ -36,6 +37,8 @@ namespace param.sfo.editor
             }
 
             titleBox.Text = title.StringValue;
+
+            titleBox.TextChanged += titleBox_TextChanged;
         }
 
         private void browseButton_Click(object sender, EventArgs e)
@@ -45,6 +48,11 @@ namespace param.sfo.editor
                 filenameBox.Text = openFileDialog1.FileName;
                 reloadButton_Click(sender, e);
             }
+        }
+
+        private void titleBox_TextChanged(object sender, EventArgs e)
+        {
+            saveButton.Enabled = File.Exists(filenameBox.Text);
         }
     }
 }

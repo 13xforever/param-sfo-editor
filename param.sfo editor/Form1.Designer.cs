@@ -111,12 +111,13 @@
             this.titleBox.Size = new System.Drawing.Size(356, 89);
             this.titleBox.TabIndex = 6;
             this.titleBox.WordWrap = false;
+            this.titleBox.TextChanged += new System.EventHandler(this.titleBox_TextChanged);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.DefaultExt = "param.sfo";
             this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "param.sfo|param.sfo";
+            this.openFileDialog1.Filter = "param.sfo|param.sfo|All sfo files|*.sfo|All files|*";
             // 
             // Form1
             // 
