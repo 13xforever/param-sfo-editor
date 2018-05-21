@@ -118,7 +118,7 @@
             // openFileDialog1
             // 
             this.openFileDialog1.DefaultExt = "param.sfo";
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.FileName = "param.sfo";
             this.openFileDialog1.Filter = "param.sfo|param.sfo|All sfo files|*.sfo|All files|*";
             // 
             // Form1
