@@ -58,6 +58,7 @@ namespace param.sfo.editor
             }
 
             titleBox.Text = titleEntry.StringValue;
+            titleBox.Focus();
 
             titleBox.TextChanged += titleBox_TextChanged;
         }
@@ -99,6 +100,22 @@ namespace param.sfo.editor
             saveButton.Enabled = false;
             paramSfo = null;
             titleEntry = null;
+        }
+
+        private void Form1_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var fileDrop = e.Data.GetData(DataFormats.FileDrop) as string[];
+                filenameBox.Text = fileDrop?[0];
+                reloadButton_Click(sender, e);
+            }
+        }
+
+        private void Form1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Link;
         }
     }
 }
