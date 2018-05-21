@@ -134,6 +134,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.filenameBox);
             this.Name = "Form1";
+            this.ShowIcon = false;
             this.Text = "param.sfo editor";
             this.ResumeLayout(false);
             this.PerformLayout();

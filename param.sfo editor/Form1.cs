@@ -15,6 +15,24 @@ namespace param.sfo.editor
             InitializeComponent();
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case (Keys.Control | Keys.O):
+                    browseButton_Click(null, null);
+                    return true;
+                case (Keys.Control | Keys.S):
+                    saveButton_Click(null, null);
+                    return true;
+                case (Keys.Control | Keys.R):
+                    reloadButton_Click(null, null);
+                    return true;
+                default:
+                    return base.ProcessCmdKey(ref msg, keyData);
+            }
+        }
+       
         private void reloadButton_Click(object sender, EventArgs e)
         {
             saveButton.Enabled = false;
@@ -60,6 +78,9 @@ namespace param.sfo.editor
 
         private void saveButton_Click(object sender, EventArgs e)
         {
+            if (!saveButton.Enabled)
+                return;
+
             var filename = filenameBox.Text;
             titleEntry.StringValue = titleBox.Text;
 
