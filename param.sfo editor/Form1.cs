@@ -35,10 +35,7 @@ namespace param.sfo.editor
                 return;
             }
 
-            var titleText = title.StringValue;
-            if (Environment.NewLine != "\n")
-                titleText = titleText.Replace("\n", Environment.NewLine);
-            titleBox.Text = titleText;
+            titleBox.Text = title.StringValue;
         }
 
         private void browseButton_Click(object sender, EventArgs e)

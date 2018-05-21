@@ -1,6 +1,6 @@
 ﻿namespace param.sfo.editor
 {
-    internal enum EntryFormat : ushort
+    public enum EntryFormat : ushort
     {
         Utf8 = 0x0004,
         Utf8Null = 0x0204,

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace param.sfo.editor
 {
-    internal class ParamSfo
+    public class ParamSfo
     {
         private ParamSfo() { }
 

@@ -6,7 +6,7 @@ using System.Text;
 namespace param.sfo.editor
 {
     [DebuggerDisplay("{StringValue}", Name = "{Key}")]
-    internal class ParamSfoEntry
+    public class ParamSfoEntry
     {
         private ParamSfoEntry() { }
 
@@ -23,29 +23,36 @@ namespace param.sfo.editor
             get
             {
                 if (ValueFormat == EntryFormat.Utf8 || ValueFormat == EntryFormat.Utf8Null)
-                    return Encoding.UTF8.GetString(BinaryValue).Trim();
+                {
+                    var result = Encoding.UTF8.GetString(BinaryValue, 0, ValueLength).Trim();
+                    if (Environment.NewLine != "\n")
+                        result = result.Replace("\n", Environment.NewLine);
+                    return result;
+                }
 
                 throw new InvalidOperationException("Current value format is not a string");
             }
             set
             {
-                if (ValueFormat == EntryFormat.Utf8 || ValueFormat == EntryFormat.Utf8Null)
-                {
-                    var tmp = new UTF8Encoding(false).GetBytes(value);
-                    var newLen = tmp.Length;
-                    if (ValueFormat == EntryFormat.Utf8Null)
-                        newLen++;
-                    if (newLen > ValueMaxLength)
-                        throw new FormatException($"Current value length is {newLen} bytes, but maximum value length is {ValueMaxLength} bytes");
+                if (ValueFormat != EntryFormat.Utf8 && ValueFormat != EntryFormat.Utf8Null)
+                    throw new InvalidOperationException("Current value format is not a string");
+
+                var saneValue = value?.Trim() ?? "";
+                if (Environment.NewLine != "\n")
+                    saneValue = saneValue.Replace(Environment.NewLine, "\n");
+
+                var tmp = new UTF8Encoding(false).GetBytes(saneValue);
+                var newLen = tmp.Length;
+                if (ValueFormat == EntryFormat.Utf8Null)
+                    newLen++;
+                if (newLen > ValueMaxLength)
+                    throw new FormatException($"Current value length is {newLen} bytes, but maximum value length is {ValueMaxLength} bytes");
 
 
-                    Buffer.BlockCopy(tmp, 0, BinaryValue, 0, tmp.Length);
-                    if (tmp.Length < BinaryValue.Length)
-                        Array.Clear(BinaryValue, tmp.Length, BinaryValue.Length - tmp.Length);
-                    ValueLength = newLen;
-                }
-
-                throw new InvalidOperationException("Current value format is not a string");
+                Buffer.BlockCopy(tmp, 0, BinaryValue, 0, tmp.Length);
+                if (tmp.Length < BinaryValue.Length)
+                    Array.Clear(BinaryValue, tmp.Length, BinaryValue.Length - tmp.Length);
+                ValueLength = newLen;
             }
         }
 
@@ -69,7 +76,7 @@ namespace param.sfo.editor
             result.Key = sb.ToString();
 
             reader.BaseStream.Seek(paramSfo.ValuesOffset + result.ValueOffset, SeekOrigin.Begin);
-            result.BinaryValue = reader.ReadBytes(result.ValueLength);
+            result.BinaryValue = reader.ReadBytes(result.ValueMaxLength);
 
             return result;
         }

@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "param.sfo editor", "param.sfo editor\param.sfo editor.csproj", "{BED0B4E6-3DCA-484B-9DDC-8AD35CCDDAB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{83F48EBE-1B76-47E3-9377-6AA28277D2FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BED0B4E6-3DCA-484B-9DDC-8AD35CCDDAB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BED0B4E6-3DCA-484B-9DDC-8AD35CCDDAB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BED0B4E6-3DCA-484B-9DDC-8AD35CCDDAB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83F48EBE-1B76-47E3-9377-6AA28277D2FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83F48EBE-1B76-47E3-9377-6AA28277D2FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83F48EBE-1B76-47E3-9377-6AA28277D2FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83F48EBE-1B76-47E3-9377-6AA28277D2FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

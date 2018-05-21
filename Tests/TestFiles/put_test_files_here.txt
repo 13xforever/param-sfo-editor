@@ -1,0 +1,1 @@
+﻿Just drop a bunch of *.sfo files in this folder
