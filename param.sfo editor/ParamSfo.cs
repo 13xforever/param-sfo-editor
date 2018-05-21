@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace param.sfo.editor
@@ -18,7 +19,7 @@ namespace param.sfo.editor
         private int ItemCount { get; set; }
         public List<ParamSfoEntry> Items { get; private set; }
 
-        public static ParamSfo Read(Stream stream)
+        public static ParamSfo ReadFrom(Stream stream)
         {
             if (!stream.CanSeek)
                 throw new ArgumentException("Stream must be seekable", nameof(stream));
@@ -44,6 +45,51 @@ namespace param.sfo.editor
             }
 
             return result;
+        }
+
+        public void WriteTo(Stream stream)
+        {
+            if (!stream.CanSeek)
+                throw new ArgumentException("Stream must be seekable", nameof(stream));
+
+            using (var writer = new BinaryWriter(stream, new UTF8Encoding(false), true))
+            {
+                writer.Write(Magic);
+                writer.Write(MajorVersion);
+                writer.Write(MinorVersion);
+                writer.Write(Reserved1);
+                KeysOffset = 0x14 + Items.Count * 0x10;
+                writer.Write(KeysOffset);
+                ValuesOffset = KeysOffset + Items.Sum(i => i.Key.Length + 0);
+                if (ValuesOffset % 4 != 0)
+                    ValuesOffset = (ValuesOffset / 4 + 1) * 4;
+                writer.Write(ValuesOffset);
+                ItemCount = Items.Count;
+                writer.Write(ItemCount);
+
+                int lastKeyOffset = KeysOffset;
+                int lastValueOffset = ValuesOffset;
+                for (var i = 0; i < Items.Count; i++)
+                {
+                    var entry = Items[i];
+
+                    writer.BaseStream.Seek(0x14 + i * 0x10, SeekOrigin.Begin);
+                    writer.Write((ushort)(lastKeyOffset - 0x14));
+                    writer.Write((ushort)entry.ValueFormat);
+                    writer.Write(entry.ValueLength);
+                    writer.Write(entry.ValueMaxLength);
+                    writer.Write(lastValueOffset);
+
+                    writer.BaseStream.Seek(lastKeyOffset, SeekOrigin.Begin);
+                    writer.Write(entry.Key);
+                    writer.Write((byte)0);
+                    lastKeyOffset = (int)writer.BaseStream.Position;
+
+                    writer.BaseStream.Seek(lastValueOffset, SeekOrigin.Begin);
+                    writer.Write(entry.BinaryValue);
+                    lastValueOffset = (int)writer.BaseStream.Position;
+                }
+            }
         }
     }
 }

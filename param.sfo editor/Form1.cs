@@ -27,7 +27,7 @@ namespace param.sfo.editor
 
             ParamSfo paramSfo;
             using (var stream = File.Open(filenameBox.Text, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
-                paramSfo = ParamSfo.Read(stream);
+                paramSfo = ParamSfo.ReadFrom(stream);
             var title = paramSfo.Items.FirstOrDefault(i => i.Key == "TITLE");
             if (title == null)
             {
